@@ -36,7 +36,7 @@ func HandleAdvance(data *rollups.AdvanceResponse) error {
 	sentence, err := rollups.Hex2Str(payload)
 	if err != nil {
 		// REPORT
-		report := rollups.ReportRequest{Payload: "sentence is not in hex format"}
+		report := rollups.ReportRequest{Payload: rollups.Str2Hex(sentence)}
 
 		_, err = rollups.SendReport(&report)
 		if err != nil {
@@ -50,7 +50,7 @@ func HandleAdvance(data *rollups.AdvanceResponse) error {
 
 	sentence = strings.ToUpper(sentence)
 	// NOTICE
-	notice := rollups.NoticeRequest{Payload: sentence}
+	notice := rollups.NoticeRequest{Payload: rollups.Str2Hex(sentence)}
 	_, err = rollups.SendNotice(&notice)
 	if err != nil {
 		return err
@@ -75,12 +75,12 @@ func HandleInspect(data *rollups.InspectResponse) error {
 	responseObject := rollups.ReportRequest{}
 	switch route {
 	case "list":
-		responseObject = rollups.ReportRequest{Payload: strings.Join(users, " ")}
+		responseObject = rollups.ReportRequest{Payload: rollups.Str2Hex(strings.Join(users, " "))}
 	case "total":
 		totalNum := strconv.Itoa(toUpperTotal)
-		responseObject = rollups.ReportRequest{Payload: totalNum}
+		responseObject = rollups.ReportRequest{Payload: rollups.Str2Hex(totalNum)}
 	default:
-		responseObject = rollups.ReportRequest{Payload: "route not implemented"}
+		responseObject = rollups.ReportRequest{Payload: rollups.Str2Hex("route not implemented")}
 	}
 
 	_, err = rollups.SendReport(&responseObject)
